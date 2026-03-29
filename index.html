@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MusicX</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,1,0" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+<header id="top-bar">
+  <div class="brand">
+    <div class="brand-icon"><span class="material-symbols-rounded">music_note</span></div>
+    <span>MusicX</span>
+  </div>
+  <div id="top-bar-user" style="display:none;">
+    <div class="avatar" id="user-avatar">?</div>
+    <button class="btn btn-ghost btn-sm" id="btn-logout">Выйти</button>
+  </div>
+</header>
+
+<main id="app" class="no-player"></main>
+
+<div id="player-bar">
+  <div class="player-thumb"><span class="material-symbols-rounded">graphic_eq</span></div>
+  <div class="player-info">
+    <div class="player-title" id="player-title">—</div>
+    <div class="player-sub" id="player-sub"></div>
+    <div style="margin-top:6px;">
+      <input type="range" class="seek" id="player-seek" value="0" min="0" max="100" step="0.1" />
+    </div>
+  </div>
+  <div class="player-controls">
+    <div class="flex-row" style="gap:4px;">
+      <button class="player-btn" id="btn-prev" title="Предыдущий">
+        <span class="material-symbols-rounded">skip_previous</span>
+      </button>
+      <button class="player-btn primary" id="btn-play-pause">
+        <span class="material-symbols-rounded">play_arrow</span>
+      </button>
+      <button class="player-btn" id="btn-next" title="Следующий">
+        <span class="material-symbols-rounded">skip_next</span>
+      </button>
+      <button class="player-btn" id="btn-stop">
+        <span class="material-symbols-rounded">stop</span>
+      </button>
+    </div>
+    <span id="player-time" style="font-size:.72rem; color:var(--on-surface-dim); font-family:'JetBrains Mono',monospace; text-align:right; display:block; margin-top:4px;">0:00 / 0:00</span>
+  </div>
+</div>
+
+<nav id="bottom-nav">
+  <button class="nav-btn" data-view="search">
+    <div class="nav-pill"></div>
+    <span class="material-symbols-rounded">search</span>
+    Поиск
+  </button>
+  <button class="nav-btn" data-view="library">
+    <div class="nav-pill"></div>
+    <span class="material-symbols-rounded">library_music</span>
+    Библиотека
+  </button>
+  <button class="nav-btn" data-view="upload">
+    <div class="nav-pill"></div>
+    <span class="material-symbols-rounded">upload</span>
+    Загрузить
+  </button>
+  <button class="nav-btn" data-view="auth">
+    <div class="nav-pill"></div>
+    <span class="material-symbols-rounded">account_circle</span>
+    Аккаунт
+  </button>
+</nav>
+
+<div id="toast-container"></div>
+
+<script src="js/config.js"></script>
+<script src="js/state.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/api.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/player.js"></script>
+<script src="js/cards.js"></script>
+<script src="js/router.js"></script>
+<script src="js/views/search.js"></script>
+<script src="js/views/library.js"></script>
+<script src="js/views/upload.js"></script>
+<script src="js/views/auth-view.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
