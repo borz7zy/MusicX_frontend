@@ -90,10 +90,10 @@ function attachCardListeners(container, items, isOwned, signal, onRefresh) {
       return;
     }
 
-    if (!authState.accessToken) {
-      toast('Войдите для воспроизведения', 'error');
-      return;
-    }
+    // if (!authState.accessToken) {
+    //   toast('Войдите для воспроизведения', 'error');
+    //   return;
+    // }
 
     const index = items.findIndex(a => a.id === id);
     playAudio(id, item?.title || 'Трек', item ? formatSize(item.size_bytes) : '', items, index);

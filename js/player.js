@@ -54,7 +54,7 @@ async function playAudio(id, title, sub, playlist, index) {
   refreshPlayingCard();
 
   try {
-    audio.src = `${API_BASE}/audio/${id}/stream`;
+    audio.src = `${API_BASE}/audio/${id}/stream?token=${authState.accessToken}`;
     audio.load();
 
     await new Promise((resolve, reject) => {
