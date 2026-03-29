@@ -28,17 +28,6 @@ function refreshPlayingCard() {
   });
 }
 
-function revokeBlobUrl() {
-  if (playerState._blobUrl) {
-    URL.revokeObjectURL(playerState._blobUrl);
-    playerState._blobUrl = null;
-  }
-  if (playerState._fetchAbort) {
-    playerState._fetchAbort.abort();
-    playerState._fetchAbort = null;
-  }
-}
-
 async function playAudio(id, title, sub, playlist, index) {
   const audio = playerState.audio;
 
@@ -48,68 +37,35 @@ async function playAudio(id, title, sub, playlist, index) {
   }
 
   audio.pause();
-  revokeBlobUrl();
 
-  playerState.currentId     = id;
-  playerState.currentTitle  = title;
+  playerState.currentId    = id;
+  playerState.currentTitle = title;
 
   if (playlist !== undefined) {
     playerState.playlist      = playlist;
     playerState.playlistIndex = index !== undefined ? index : -1;
   }
 
-  const titleEl = document.getElementById('player-title');
-  const subEl   = document.getElementById('player-sub');
-  titleEl.textContent = title;
-  subEl.textContent   = sub || '';
+  document.getElementById('player-title').textContent = title;
+  document.getElementById('player-sub').textContent   = sub || '';
 
   setPlayerBar(true);
   updateNavButtons();
   refreshPlayingCard();
 
-  const thumb = document.querySelector('#player-bar .player-thumb');
-  if (thumb) thumb.classList.add('loading');
-
-  const abortCtrl = new AbortController();
-  playerState._fetchAbort = abortCtrl;
-
   try {
-    const headers = {};
-    if (authState.accessToken) headers['Authorization'] = `Bearer ${authState.accessToken}`;
-
-    const res = await fetch(`${API_BASE}/audio/${id}/stream`, {
-      headers,
-      signal: abortCtrl.signal,
-    });
-
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-
-    const blob = await res.blob();
-    if (abortCtrl.signal.aborted) return;
-
-    const thumb = document.querySelector('#player-bar .player-thumb');
-    if (thumb) thumb.classList.remove('loading');
-
-    const blobUrl = URL.createObjectURL(blob);
-    playerState._blobUrl   = blobUrl;
-    playerState._fetchAbort = null;
-
-    audio.src = blobUrl;
+    audio.src = `${API_BASE}/audio/${id}/stream`;
     audio.load();
 
     await new Promise((resolve, reject) => {
       audio.addEventListener('loadedmetadata', resolve, { once: true });
-      audio.addEventListener('error', () => reject(new Error('Ошибка декодирования аудио')), { once: true });
+      audio.addEventListener('error', () => reject(new Error('Ошибка загрузки аудио')), { once: true });
     });
 
     await audio.play();
   } catch (e) {
-    if (abortCtrl.signal.aborted) return;
-    const thumb = document.querySelector('#player-bar .player-thumb');
-    if (thumb) thumb.classList.remove('loading');
     toast('Ошибка воспроизведения: ' + e.message, 'error');
     playerState.currentId = null;
-    revokeBlobUrl();
     setPlayerBar(false);
     refreshPlayingCard();
   }
@@ -164,7 +120,6 @@ function setupPlayerListeners() {
     audio.currentTime = 0;
     audio.removeAttribute('src');
     audio.load();
-    revokeBlobUrl();
     playerState.currentId     = null;
     playerState.playlist      = [];
     playerState.playlistIndex = -1;
